@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -14,7 +16,7 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true,
       match: [
-        "^[w-.]+@([w-]+.)+[w-]{2,4}$",
+        /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
         "Please enter a valid email address",
       ],
     },
@@ -31,10 +33,41 @@ const UserSchema = new mongoose.Schema(
       type: String,
       maxlength: [500, "Bio cannot be more than 500 characters long"],
     },
+    refreshToken: {
+      type: String
+    },
   },
   { timestamps: true }
 );
 
+
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+UserSchema.methods.comparePassword = async function (password) {
+  try {
+    return await bcrypt.compare(password, this.password);
+  } catch (error) {
+    throw new Error("Error comparing password");
+  }
+};
+
+UserSchema.methods.generateRefreshToken = function () {
+  return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
+};
+
+UserSchema.methods.generateAccessToken = function (){
+  return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
+}
 
 const User = mongoose.model('User', UserSchema);
 

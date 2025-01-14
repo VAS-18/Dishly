@@ -34,12 +34,13 @@ const recipeSchema = new mongoose.Schema(
       },
     ],
 
-    instructions: {
-      type: String,
-      required: true,
-    },
-
-    cookiingTime: {
+    instructions:[
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    cookingTime: {
       type: Number,
       required: true,
     },
@@ -70,14 +71,20 @@ const recipeSchema = new mongoose.Schema(
         },
         createdAt: {
           type: Date,
-          default: Date.now,
+          default: ()=> Date.now(),
         },
       },
     ],
-
-    tags: {
+    difficulty: {
       type: String,
+      enum: ["Easy", "Medium", "Hard"],
+      required: true,
     },
+    tags: [
+      {
+        type: String,
+      }
+    ],
     aiSuggestions: {
       variations: {
         type: String,
@@ -97,3 +104,7 @@ const recipeSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+const Recipe = mongoose.model("Recipe", recipeSchema);
+
+export default Recipe;

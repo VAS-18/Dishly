@@ -1,17 +1,17 @@
 import { error } from "console";
-import reciSchema from "../models/recipeModel";
+import Recipe from "../models/recipeModel.js";
+import User from "../models/userModel.js";
 
-import { recipeSchema } from "../utils/validation";
-import { get } from "http";
+import { recipeSchema } from "../utils/validation.js";
 
 //create recipe
 export const createRecipe = async (req, res) => {
   try {
     const validateBody = recipeSchema.parse(req.body);
 
-    const newRecipe = new reciSchema({
+    const newRecipe = new Recipe({
       ...validateBody,
-      author: req.userId,
+      author: req.user._id,
     });
 
     await newRecipe.save();
@@ -19,7 +19,7 @@ export const createRecipe = async (req, res) => {
     res.status(201).json(newRecipe);
   } catch (error) {
     res.status(400).json({
-      error: error.error,
+      error: "Controller err",
       message: error.message,
     });
   }
@@ -28,7 +28,7 @@ export const createRecipe = async (req, res) => {
 //get recipe
 export const getRecipe = async (req, res) => {
   try {
-    const recipes = await reciSchema.find().populate("author", "username");
+    const recipes = await Recipe.find().populate("author", "username");
     res.json(recipes);
   } catch (error) {
     res.status(500).json({
@@ -39,7 +39,7 @@ export const getRecipe = async (req, res) => {
 
 export const getRecipeById = async (req, res) => {
   try {
-    const getRecipe = await reciSchema
+    const getRecipe = await Recipe
       .findById(req.params.id)
       .populate("author", "username");
     if (!recipe) {
@@ -58,8 +58,8 @@ export const getRecipeById = async (req, res) => {
 
 export const updateRecipe = async (req, res) => {
   try {
-    const validateBody = reciSchema.parse(req.body);
-    const findRecipe = await reciSchema.findOneAndUpdate(
+    const validateBody = Recipe.parse(req.body);
+    const findRecipe = await Recipe.findOneAndUpdate(
       {
         _id: req.params.id,
         author: req.userId,
@@ -84,7 +84,7 @@ export const updateRecipe = async (req, res) => {
 
 export const deleteRecipe = async (req, res) => {
   try {
-    const recipe = await reciSchema.findByIdAndDelete({
+    const recipe = await Recipe.findByIdAndDelete({
       _id: req.params.id,
       author: req.userId,
     });
@@ -95,5 +95,10 @@ export const deleteRecipe = async (req, res) => {
       });
     }
     res.json({ message: "recipe deleted successfully" });
-  } catch (error) {}
+  } catch (error) {
+    res.status(400).json({
+      error: error.error,
+      message: error.message,
+    })
+  }
 };

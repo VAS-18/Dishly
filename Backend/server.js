@@ -1,9 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors'
-import mongoose from 'mongoose';
 import morgan from 'morgan'
 import connectDB from './config/db.js'
+import authRoutes from './routes/authRoutes.js'
+import recipeRoutes from './routes/recipeRoutes.js'
+
 
 dotenv.config();
 
@@ -18,10 +20,19 @@ app.use(express.urlencoded({extended: true}));
 
 
 
+
+//Register Route
+app.use('/api/auth', authRoutes);
+
+//Recipe Route
+app.use('/api/recipe', recipeRoutes);
+
 //test route
 app.get('/api/test',(req,res) => {
     res.json({message: "Welcome to Dishly"});
 });
+
+
 
 
 //error handling middleware
@@ -48,7 +59,7 @@ app.use((req,res)=>{
 
 
 //server setup
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT,()=>{
     console.log(`server is running on port ${PORT}`);
 });
