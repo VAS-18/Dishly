@@ -1,7 +1,26 @@
-import bcrypt from 'bcrypt';
+
 import User from '../models/userModel.js';
 import { registerSchema } from '../utils/validation.js';
-import jwt from 'jsonwebtoken';
+
+const generateRefreshAndAccessToken = async (userId) => {
+    try {
+        const user = await User.findByIdAndUpdate(userId);
+       const refreshToken = user.generateRefreshToken();
+       const accessToken = user.generateAccessToken();
+
+         user.refreshToken = refreshToken;
+
+        await user.save( { validateBeforeSave: false } );
+
+        return { refreshToken, accessToken };
+
+    } catch (error) {
+        res.status(500).json({
+            error: "Error generating tokens"
+    });
+}
+}
+
 
 export const register  = async(req, res) => {
     try {
@@ -30,30 +49,36 @@ export const register  = async(req, res) => {
 export const login = async (req, res) => {
 
     try {
-        const { email, password } = req.body;
-
-        const user = await User.findOne({ email });
-        if (!user) {
+        const { username, email, password } = req.body;
+        if(!username || !email){
             return res.status(400).json({
-                error: 'Invalid email or password'
+                error: 'Username or email is required'
             });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const user = await User.findOne({ $or: [{ email }, { username }] });
 
-        if(!isMatch){
+
+        if (!user) {
             return res.status(400).json({
+                error: 'User does not Exist'
+            });
+        }
+
+        const isPasswordValid = await user.comparePassword(password);
+
+        if(!isPasswordValid){
+            return res.status(401).json({
                 error: 'Invalid email or password'
             })
         }
 
-        const token = jwt.sign({ userId : User._id}, process.env.JWT_SECRET, {
-            expiresIn: '1h'
-        });
+       const { accessToken, refreshToken } = await generateRefreshAndAccessToken(user._id);
 
         res.json({
             message: 'Login Successful',
-            token
+            accessToken,
+            refreshToken
         });
 
     } catch (error) {
@@ -63,4 +88,3 @@ export const login = async (req, res) => {
     }
 
 }
-

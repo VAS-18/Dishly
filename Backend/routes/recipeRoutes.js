@@ -15,7 +15,7 @@ router.get("/", getRecipe);
 router.get("/:id", getRecipeById);
 
 //Protected Routes which requires authentication
-router.post("/", authMiddleware, createRecipe);
+router.route("/").post(authMiddleware, createRecipe);
 router.put("/:id", authMiddleware, updateRecipe);
 router.delete("/:id", authMiddleware, deleteRecipe);
 

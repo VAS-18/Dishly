@@ -1,6 +1,5 @@
-import { error } from "console";
+
 import Recipe from "../models/recipeModel.js";
-import User from "../models/userModel.js";
 
 import { recipeSchema } from "../utils/validation.js";
 
@@ -16,7 +15,11 @@ export const createRecipe = async (req, res) => {
 
     await newRecipe.save();
 
-    res.status(201).json(newRecipe);
+    res.status(201).json({
+      message: "Recipe created successfully",
+      newRecipe
+    });
+
   } catch (error) {
     res.status(400).json({
       error: "Controller err",
