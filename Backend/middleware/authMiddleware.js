@@ -14,7 +14,7 @@ export const authMiddleware = async (req, res, next) => {
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
     // res.status(200).json({ decoded });
 
-    const user = await User.findById(decoded?.userId).select(
+    const user = await User.findById(decoded?._id).select(
       "-password -refreshToken"
     );
 

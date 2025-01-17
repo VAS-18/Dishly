@@ -11,12 +11,12 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", getRecipe);
-router.get("/:id", getRecipeById);
+router.route("/").get(getRecipe);
+router.route("/:id").get(getRecipeById);
 
 //Protected Routes which requires authentication
 router.route("/").post(authMiddleware, createRecipe);
-router.put("/:id", authMiddleware, updateRecipe);
-router.delete("/:id", authMiddleware, deleteRecipe);
+router.route("/:id").put(authMiddleware, updateRecipe);
+router.route("/:id").delete(authMiddleware, deleteRecipe);
 
 export default router;

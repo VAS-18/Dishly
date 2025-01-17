@@ -49,7 +49,7 @@ app.use((err,req,res,next) => {
 
 //handling 404
 app.use((req,res)=>{
-    res.status(400).json({
+    res.status(404).json({
         status: 'error',
         message: 'Route not found'
     })
