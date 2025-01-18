@@ -1,41 +1,46 @@
 import multer from "multer";
 import cloudinary from "../config/cloudinary.js";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
+import fs from "fs";
+import path from "path";
 
-const profileStorage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: "profile-pictures",
-        allowed_formats: ["jpg", "png" , "jpeg"],
-    },
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
 });
 
-const recipeStorage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: "recipe-pictures",
-        allowed_formats: ["jpg", "png", "jpe"],
-    },
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15mb
+  fileFilter: (req, file, cb) => {
+    const filetypes = ["image/jpeg", "image/png", "image/jpg"];
+    if (filetypes.includes(file.mimetype)) {
+      return cb(null, true);
+    } else {
+      return cb(new Error("Invalid file type. Only jpg, jpeg, png allowed"));
+    }
+  },
 });
 
-const postStorage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: "post-pictures",
-        allowed_formats: ["jpg", "png", "jpe"],
-    },
-});
+const profileUpload = upload.single("profileImage");
+
+const recipeUpload = upload.array("images", 5);
+
+const uploadCloudinary = async (filePath, folder) => {
+  try {
+    const result = await cloudinary.uploader.upload(filePath, {
+      folder: folder,
+    });
+    return result.secure_url;
+  } catch (error) {
+    throw new Error("Error uploading image to cloudinary" + error.message);
+  } finally {
+    fs.unlinkSync(filePath);
+  }
+};
 
 
-const profileUpload = multer({
-    storage: profileStorage,
-    limits: { fileSize: 5*1024*1024 }, //Limits File Size to 5MB
-});
-
-const postUpload = multer({
-    storage: postStorage,
-    limits: { fileSize: 8*1024*1024 }, //Limits File Size to 8MB
-});
-
-
-export { profileUpload, postUpload };
+export { profileUpload, recipeUpload, uploadCloudinary };

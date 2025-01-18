@@ -6,11 +6,21 @@ import { recipeSchema } from "../utils/validation.js";
 //create recipe
 export const createRecipe = async (req, res) => {
   try {
+
+
     const validateBody = recipeSchema.parse(req.body);
+    if (!req.file) {
+      return res.status(400).json({
+        error: "Please upload a file",
+      });
+    }
+
+    const fileUrl = req.file.path;
 
     const newRecipe = new Recipe({
       ...validateBody,
       author: req.user._id,
+      images: fileUrl,
     });
 
     await newRecipe.save();
@@ -45,7 +55,7 @@ export const getRecipeById = async (req, res) => {
     const getRecipe = await Recipe
       .findById(req.params.id)
       .populate("author", "username");
-    if (!recipe) {
+    if (!getRecipe) {
       return res.status(404).json({
         error: "Recipe Not Found",
       });

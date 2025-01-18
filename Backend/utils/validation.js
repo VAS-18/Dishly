@@ -48,3 +48,11 @@ export const registerSchema = z.object({
     .max(500, "Bio cannot be more than 500 characters long")
     .optional(),
 });
+
+export const postValidationSchema = z.object({
+  author: z.string(),
+  caption: z.string().max(500, "Caption cannot be more than 500 characters long"),
+  media: z.string(),
+  likes: z.array(z.string()).optional(),
+  comment
+});

@@ -49,11 +49,17 @@ const recipeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    images: [
-      {
+    images: [{
+      type: {
         type: String,
+        enum: ['image', 'video'],
+        required: true
       },
-    ],
+      url: {
+        type: String,
+        required: true
+      }
+    }],
 
     likes: {
       type: Number,
