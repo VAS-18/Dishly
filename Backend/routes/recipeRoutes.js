@@ -18,10 +18,10 @@ router.route("/:id").get(getRecipeById);
 //Protected Routes which requires authentication
 router
   .route("/")
-  .post(authMiddleware, recipeUpload.array("recipe-images", 5), createRecipe);
+  .post(authMiddleware, recipeUpload, createRecipe);
 router
   .route("/:id")
-  .put(authMiddleware, recipeUpload.array("recipe-images", 5), updateRecipe);
+  .put(authMiddleware, recipeUpload, updateRecipe);
 
 router.route("/:id").delete(authMiddleware, deleteRecipe);
 
