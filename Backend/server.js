@@ -1,11 +1,10 @@
 import express from 'express';
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
 import cors from 'cors'
 import morgan from 'morgan'
 import connectDB from './config/db.js'
 import authRoutes from './routes/authRoutes.js'
 import recipeRoutes from './routes/recipeRoutes.js'
-
 
 dotenv.config();
 
@@ -35,16 +34,20 @@ app.get('/api/test',(req,res) => {
 
 
 
-//error handling middleware
-app.use((err,req,res,next) => {
-    const statuscode = err.statuscode;
-    const errMessage = err.message;
-    res.status(statuscode).json({
-        status: 'error',
-        statuscode,
-        message: errMessage
-    })
-})
+app.use((err, req, res, next) => {
+    // Set default status code if none provided
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+  
+    console.error('Error:', err); // Add logging for debugging
+  
+    res.status(statusCode).json({
+      status: 'error',
+      statusCode,
+      message
+    });
+  });
+
 
 
 //handling 404

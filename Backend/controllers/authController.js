@@ -1,90 +1,120 @@
-
-import User from '../models/userModel.js';
-import { registerSchema } from '../utils/validation.js';
+import User from "../models/userModel.js";
+import { registerSchema } from "../utils/validation.js";
+import { uploadOnCloudinary } from "../config/cloudinary.js";
 
 const generateRefreshAndAccessToken = async (userId) => {
-    try {
-        const user = await User.findByIdAndUpdate(userId);
-       const refreshToken = user.generateRefreshToken();
-       const accessToken = user.generateAccessToken();
+  try {
+    const user = await User.findById(userId);
+    if (!user) throw new Error("User not found");
 
-         user.refreshToken = refreshToken;
+    const refreshToken = user.generateRefreshToken();
+    const accessToken = user.generateAccessToken();
 
-        await user.save( { validateBeforeSave: false } );
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
 
-        return { refreshToken, accessToken };
+    return { refreshToken, accessToken };
+  } catch (error) {
+    throw new Error("Error generating tokens: " + error.message);
+  }
+};
 
-    } catch (error) {
-        res.status(500).json({
-            error: "Error generating tokens"
+export const register = async (req, res) => {
+  try {
+    const validateBody = registerSchema.parse(req.body);
+
+    // Check for existing user
+    const existingUser = await User.findOne({
+      $or: [{ email: validateBody.email }, { username: validateBody.username }],
     });
-}
-}
 
+    if (existingUser) {
+      return res.status(400).json({
+        message: "User already exists",
+      });
+    }
+    const profileImagePath = req.files?.profileImage[0]?.path;
 
-export const register  = async(req, res) => {
-    try {
-        const validateBody = registerSchema.parse(req.body);
-        const ExistingUser = await User.findOne({ $or: [{ email: validateBody.email }, { username: validateBody.username }] });
-        if (ExistingUser) {
-            return res.status(400).json({
-                message: "User already exists",
-            });
-        }
-
-        const user = await new User({
-            username: validateBody.username,
-            email: validateBody.email,
-            password: validateBody.password,
-        });
-        user.save();
-        res.status(201).json({"message": "User created successfully"});
-
-    } catch (error) {
-        res.status(400).json({error: error.error || error.message})
+    if (!profileImagePath) {
+      return res.status(400).json({
+        error: "Please upload a profile image",
+      });
     }
 
-}
+    // Upload image to Cloudinary
+    const profileImage = await uploadOnCloudinary(profileImagePath);
+
+    if (!profileImage) {
+      return res.status(400).json({
+        error: "Profile image upload failed",
+      });
+    }
+
+    const user = await User.create({
+      username: validateBody.username,
+      email: validateBody.email,
+      password: validateBody.password,
+      profileImage: profileImage.url,
+    });
+
+    await user.save();
+
+    return res.status(201).json({
+      message: "User created successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        profileImage: user.profileImage,
+      },
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    return res.status(500).json({
+      error: error.message || "Internal server error",
+    });
+  }
+};
 
 export const login = async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
 
-    try {
-        const { username, email, password } = req.body;
-        if(!username || !email){
-            return res.status(400).json({
-                error: 'Username or email is required'
-            });
-        }
-
-        const user = await User.findOne({ $or: [{ email }, { username }] });
-
-
-        if (!user) {
-            return res.status(400).json({
-                error: 'User does not Exist'
-            });
-        }
-
-        const isPasswordValid = await user.comparePassword(password);
-
-        if(!isPasswordValid){
-            return res.status(401).json({
-                error: 'Invalid email or password'
-            })
-        }
-
-       const { accessToken, refreshToken } = await generateRefreshAndAccessToken(user._id);
-
-        res.json({
-            message: 'Login Successful',
-            accessToken,
-            refreshToken
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            error: error.message
-        });
+    if (!username || !email) {
+      return res.status(400).json({
+        error: "Username or email is required",
+      });
     }
 
-}
+    const user = await User.findOne({ $or: [{ email }, { username }] });
+
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User does not exist",
+      });
+    }
+
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        error: "Invalid credentials",
+      });
+    }
+
+    const { accessToken, refreshToken } = await generateRefreshAndAccessToken(
+      user._id
+    );
+
+    return res.status(200).json({
+      message: "Login Successful",
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+};

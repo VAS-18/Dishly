@@ -42,7 +42,6 @@ export const registerSchema = z.object({
     .string()
     .min(8, "Password must be at least 8 characters long")
     .max(50, "Password cannot be more than 50 characters long"),
-  ProfileImage: z.string().optional(),
   bio: z
     .string()
     .max(500, "Bio cannot be more than 500 characters long")
@@ -54,5 +53,4 @@ export const postValidationSchema = z.object({
   caption: z.string().max(500, "Caption cannot be more than 500 characters long"),
   media: z.string(),
   likes: z.array(z.string()).optional(),
-  comment
 });

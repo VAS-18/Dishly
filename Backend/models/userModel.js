@@ -27,9 +27,8 @@ const UserSchema = new mongoose.Schema(
       required: true,
       minlength: [8, "Password Must be at least 8 characters long"],
     },
-    ProfileImage: {
+    profileImage: {
       type: String,
-      default: "default.jpg",
     },
     bio: {
       type: String,
