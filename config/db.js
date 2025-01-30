@@ -1,6 +1,4 @@
-import exp from "constants";
 import mongoose from "mongoose";
-
 
 const connectDB = async() => {
     try {

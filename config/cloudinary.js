@@ -2,9 +2,13 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
 cloudinary.config({ 
-        cloud_name: 'dmqbbniy6',
-        api_key: '664655462113854',
-        api_secret:'MQQ51jfPn-MzhK2ipqiuyKOX384',
+        cloud_name: "dmqbbniy6",
+        api_key: "664655462113854",
+        api_secret:"MQQ51jfPn-MzhK2ipqiuyKOX384",
+
+// CLOUDINARY_CLOUD_NAME=dmqbbniy6
+// CLOUDINARY_API_KEY=664655462113854
+// CLOUDINARY_API_SECRET=MQQ51jfPn-MzhK2ipqiuyKOX384
     });
 
 

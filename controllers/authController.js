@@ -1,5 +1,5 @@
 import User from "../models/userModel.js";
-import { registerSchema, loginSchema } from "../utils/validation.js";
+import { registerSchema } from "../utils/validation.js";
 import { uploadOnCloudinary } from "../config/cloudinary.js";
 
 const generateRefreshAndAccessToken = async (userId) => {
@@ -76,19 +76,17 @@ export const register = async (req, res) => {
   }
 };
 
-
-
 export const login = async (req, res) => {
   try {
-    const {username,email,password} = req.body
+    const { username, email, password } = req.body;
 
-    if(!username && !email){
+    if (!username || !email) {
       return res.status(400).json({
-        error: "Please provide email or user",
-      })
+        error: "Username or email is required",
+      });
     }
 
-    const user = await User.findOne({$or : [{username},{email}]});
+    const user = await User.findOne({ $or: [{ email }, { username }] });
 
 
     if (!user) {

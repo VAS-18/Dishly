@@ -3,8 +3,6 @@ import Post from "../models/postModel.js";
 
 export const uploadProfilePictureController = async (req, res) => {
     try {
-
-        const {title, description} = req.body;
         
         if(!req.file){
             return res.status(400).json({error: "Please upload a file"});
