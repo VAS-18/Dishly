@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const navigate = useNavigate();
 
   const loginMutation = useMutation({
     mutationFn: async (form) => {
@@ -15,6 +18,7 @@ export default function Login() {
     onSuccess: (data) => {
       localStorage.setItem('accessToken', data.accessToken);
       setSuccess('Login successful!');
+      navigate('/feed');
     },
     onError: (err) => {
       setError(err.response?.data?.error || err.message || 'Login failed');
