@@ -8,7 +8,7 @@ dotenv.config();
 const checkUser = async (token) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findOne({ _id: decoded.userId });
+        const user = await User.findOne({ _id: decoded._id });
         
         if (user) {
             console.log('User found:', user);

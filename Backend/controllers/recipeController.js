@@ -1,14 +1,10 @@
-
 import Recipe from "../models/recipeModel.js";
-
-import { recipeSchema } from "../utils/validation.js";
 
 //create recipe
 export const createRecipe = async (req, res) => {
   try {
-
-
-    const validateBody = recipeSchema.parse(req.body);
+    // Zod validation removed, use req.body directly
+    const recipeData = req.body;
     if (!req.file) {
       return res.status(400).json({
         error: "Please upload a file",
@@ -18,7 +14,7 @@ export const createRecipe = async (req, res) => {
     const fileUrl = req.file.path;
 
     const newRecipe = new Recipe({
-      ...validateBody,
+      ...recipeData,
       author: req.user._id,
       images: fileUrl,
     });
@@ -71,13 +67,14 @@ export const getRecipeById = async (req, res) => {
 
 export const updateRecipe = async (req, res) => {
   try {
-    const validateBody = Recipe.parse(req.body);
+    // Zod validation removed, use req.body directly
+    const updateData = req.body;
     const findRecipe = await Recipe.findOneAndUpdate(
       {
         _id: req.params.id,
-        author: req.userId,
+        author: req.user._id,
       },
-      validateBody,
+      updateData,
       { new: true }
     );
 
@@ -97,9 +94,9 @@ export const updateRecipe = async (req, res) => {
 
 export const deleteRecipe = async (req, res) => {
   try {
-    const recipe = await Recipe.findByIdAndDelete({
+    const recipe = await Recipe.findOneAndDelete({
       _id: req.params.id,
-      author: req.userId,
+      author: req.user._id,
     });
 
     if (!recipe) {

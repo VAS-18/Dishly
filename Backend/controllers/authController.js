@@ -1,5 +1,4 @@
 import User from "../models/userModel.js";
-import { registerSchema } from "../utils/validation.js";
 import { uploadOnCloudinary } from "../config/cloudinary.js";
 
 const generateRefreshAndAccessToken = async (userId) => {
@@ -21,11 +20,12 @@ const generateRefreshAndAccessToken = async (userId) => {
 
 export const register = async (req, res) => {
   try {
-    const validateBody = registerSchema.parse(req.body);
+    // Zod validation removed, use req.body directly
+    const { username, email, password } = req.body;
 
     // Check for existing user
     const existingUser = await User.findOne({
-      $or: [{ email: validateBody.email }, { username: validateBody.username }],
+      $or: [{ email }, { username }],
     });
 
     if (existingUser) {
@@ -33,7 +33,7 @@ export const register = async (req, res) => {
         message: "User already exists",
       });
     }
-    const profileImagePath = req.files?.profileImage[0]?.path;
+    const profileImagePath = req.files?.profileImage?.[0]?.path;
 
     if (!profileImagePath) {
       return res.status(400).json({
@@ -51,9 +51,9 @@ export const register = async (req, res) => {
     }
 
     const user = await User.create({
-      username: validateBody.username,
-      email: validateBody.email,
-      password: validateBody.password,
+      username,
+      email,
+      password,
       profileImage: profileImage.url,
     });
 
@@ -80,14 +80,13 @@ export const login = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    if (!username || !email) {
+    if ((!username && !email) || !password) {
       return res.status(400).json({
-        error: "Username or email is required",
+        error: "Username or email and password are required",
       });
     }
 
     const user = await User.findOne({ $or: [{ email }, { username }] });
-
 
     if (!user) {
       return res.status(404).json({
