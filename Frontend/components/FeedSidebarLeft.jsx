@@ -29,7 +29,7 @@ export default function FeedSidebarLeft({ user, userLoading }) {
           className="px-4 py-2 bg-orange-100 rounded-lg font-semibold hover:bg-orange-200 transition"
           to="#"
         >
-          Food Feed
+          Home
         </Link>
         <Link className="px-4 py-2 rounded-lg hover:bg-gray-100 transition" to="#">
           Messages

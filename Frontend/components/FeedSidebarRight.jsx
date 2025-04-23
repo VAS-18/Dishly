@@ -1,4 +1,6 @@
 import React from "react";
+import storiesData from "../utils/stories.js";
+
 
 export default function FeedSidebarRight({ stories, suggested, categories }) {
   return (
@@ -7,7 +9,7 @@ export default function FeedSidebarRight({ stories, suggested, categories }) {
       <div>
         <h2 className="font-bold text-lg mb-4">Food Stories</h2>
         <div className="flex space-x-4">
-          {stories.map((story, i) => (
+          {storiesData.map((story, i) => (
             <div key={i} className="flex flex-col items-center">
               <img
                 src={story.img}
