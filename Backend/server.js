@@ -4,7 +4,11 @@ import cors from "cors";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
+import likeRoutes from "./routes/likesRoutes.js";
 import recipeRoutes from "./routes/recipeRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -24,6 +28,16 @@ app.use("/api/auth", authRoutes);
 
 //Recipe Route
 app.use("/api/recipe", recipeRoutes);
+
+app.use("/api/posts", postRoutes);
+
+app.use("/api/comments", commentRoutes);
+
+app.use("/api/likes", likeRoutes);
+
+app.use("/api/recipes", recipeRoutes);
+
+app.use("/api/users", userRoutes);
 
 //test route
 app.get("/api/test", (req, res) => {

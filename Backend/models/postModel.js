@@ -18,6 +18,10 @@ const PostSchema = new mongoose.Schema(
     cuisine: {
       type: String,
     },
+    recipe: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Recipe",
+    },
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
