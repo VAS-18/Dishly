@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 export default function FeedSidebarLeft({ user, userLoading }) {
   const navigate = useNavigate();
   return (
-    <aside className="w-64 p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-8 h-full">
+    <aside className="w-64 p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-8 h-auto">
       <div className="flex flex-col items-center">
         {userLoading ? (
           <div>Loading...</div>

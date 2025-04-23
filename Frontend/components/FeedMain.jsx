@@ -1,5 +1,6 @@
 import React from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
+import { Heart } from "lucide-react";
 
 export default function FeedMain({
   posts,
@@ -73,7 +74,10 @@ export default function FeedMain({
                   />
                 )}
                 <div className="flex justify-between text-sm text-gray-600">
-                  <span>❤️ {post.likes?.length || 0}</span>
+                  <div className="flex items-center gap-2 w-8">
+                  <Heart/>
+                  <span>{post.likes?.length || 0}</span>
+                  </div>
                   <span>💬 {post.comments?.length || 0}</span>
                 </div>
               </motion.div>

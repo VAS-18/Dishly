@@ -4,6 +4,7 @@ import axios from "axios";
 import FeedMain from "../../components/FeedMain";
 import FeedSidebarLeft from "../../components/FeedSidebarLeft";
 import FeedSidebarRight from "../../components/FeedSidebarRight";
+import PostBox from "../../components/PostBox";
 const getToken = () => localStorage.getItem("accessToken");
 
 const Feed = () => {
@@ -52,12 +53,14 @@ const Feed = () => {
   ];
 
   return (
-    <div className="h-screen overflow-hidden flex">
+    <div className="min-h-screen flex justify-between p-10">
       {/* Left Sidebar */}
+      <div>
       <FeedSidebarLeft user={user} userLoading={userLoading} />
+      </div>
 
       {/* Main Feed */}
-      <div className="flex-1 flex flex-col h-screen">
+      <div className=" flex flex-col h-screen w-1/2">
         <FeedMain
           posts={posts}
           isLoading={isLoading}
@@ -74,6 +77,7 @@ const Feed = () => {
         suggested={suggested}
         categories={categories}
       />
+      <PostBox user={user} />
     </div>
   );
 };
