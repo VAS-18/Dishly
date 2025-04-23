@@ -24,7 +24,7 @@ function AppRoutes() {
 
   useEffect(() => {
     setRouteLoading(true);
-    const timeout = setTimeout(() => setRouteLoading(false), 1000);
+    const timeout = setTimeout(() => setRouteLoading(false), 1200);
     return () => clearTimeout(timeout);
   }, [location]);
 

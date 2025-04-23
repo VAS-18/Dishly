@@ -5,10 +5,12 @@ import FeedMain from "../../components/FeedMain";
 import FeedSidebarLeft from "../../components/FeedSidebarLeft";
 import FeedSidebarRight from "../../components/FeedSidebarRight";
 import PostBox from "../../components/PostBox";
+import Foodies from "../../components/Foodies";
 const getToken = () => localStorage.getItem("accessToken");
 
 const Feed = () => {
   const [activeTab, setActiveTab] = useState("Friends");
+  const [showFoodies, setShowFoodies] = useState(false);
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ["posts"],
@@ -55,20 +57,28 @@ const Feed = () => {
   return (
     <div className="min-h-screen flex justify-between p-10">
       {/* Left Sidebar */}
-      <div>
-      <FeedSidebarLeft user={user} userLoading={userLoading} />
-      </div>
+      <FeedSidebarLeft
+        user={user}
+        userLoading={userLoading}
+        setShowFoodies={setShowFoodies}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
 
       {/* Main Feed */}
-      <div className=" flex flex-col h-screen w-1/2">
-        <FeedMain
-          posts={posts}
-          isLoading={isLoading}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          user={user}
-          userLoading={userLoading}
-        />
+      <div className="flex flex-col h-screen w-1/2 pb-40">
+        {showFoodies ? (
+          <Foodies user={user} />
+        ) : (
+          <FeedMain
+            posts={posts}
+            isLoading={isLoading}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            user={user}
+            userLoading={userLoading}
+          />
+        )}
       </div>
 
       {/* Right Sidebar */}

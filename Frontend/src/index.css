@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
 
+@theme {
+  --color-sunset: #FF6B35;  
+  --color-sand:   #F7C59F;  
+  --color-linen:  #EFEFD0; 
+}
+
 .hide-scrollbar {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */

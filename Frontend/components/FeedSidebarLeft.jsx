@@ -1,10 +1,41 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function FeedSidebarLeft({ user, userLoading }) {
+export default function FeedSidebarLeft({
+  user,
+  userLoading,
+  setShowFoodies,
+  activeTab,
+  setActiveTab,
+}) {
   const navigate = useNavigate();
+
+  const navItems = [
+    {
+      label: "Home",
+      onClick: () => {
+        setShowFoodies(false);
+        setActiveTab("Home");
+      },
+      tab: "Home",
+    },
+    {
+      label: "Messages",
+      onClick: () => setActiveTab("Messages"),
+      tab: "Messages",
+    },
+    {
+      label: "Foodies",
+      onClick: () => {
+        setShowFoodies(true);
+        setActiveTab("Foodies");
+      },
+      tab: "Foodies",
+    },
+  ];
+
   return (
-    <aside className="w-64 p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-8 h-auto">
+    <aside className="w-64 p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-8 max-h-screen overflow-y-auto">
       <div className="flex flex-col items-center">
         {userLoading ? (
           <div>Loading...</div>
@@ -25,18 +56,19 @@ export default function FeedSidebarLeft({ user, userLoading }) {
         )}
       </div>
       <nav className="flex flex-col gap-3">
-        <Link
-          className="px-4 py-2 bg-orange-100 rounded-lg font-semibold hover:bg-orange-200 transition"
-          to="#"
-        >
-          Home
-        </Link>
-        <Link className="px-4 py-2 rounded-lg hover:bg-gray-100 transition" to="#">
-          Messages
-        </Link>
-        <Link className="px-4 py-2 rounded-lg hover:bg-gray-100 transition" to="#">
-          Foodies
-        </Link>
+        {navItems.map((item) => (
+          <button
+            key={item.label}
+            className={`px-4 py-2 rounded-lg font-semibold transition text-left ${
+              activeTab === item.tab
+                ? "bg-sunset text-white shadow"
+                : "bg-orange-100 text-gray-800 hover:bg-orange-200"
+            }`}
+            onClick={item.onClick}
+          >
+            {item.label}
+          </button>
+        ))}
       </nav>
     </aside>
   );
