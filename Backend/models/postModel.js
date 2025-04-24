@@ -7,10 +7,14 @@ const PostSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    image: {
+    title:{
       type: String,
-      required: true,
+      required: true
     },
+    image:[{
+      type: String
+    }],
+
     caption: {
       type: String,
       maxlength: 1000,

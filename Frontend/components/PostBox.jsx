@@ -11,7 +11,7 @@ export default function PostBox({ user }) {
       {!open && (
         <div className="fixed bottom-0 left-0 w-full flex justify-center z-10 bg-transparent opacity-50 hover:opacity-100 transition-opacity duration-300">
           <button
-            className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-4 mb-4 flex flex-col gap-2 border cursor-pointer"
+            className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-4 mb-4 flex flex-col gap-2 cursor-pointer"
             onClick={() => setOpen(true)}
           >
             <div className="flex items-center gap-3">
@@ -30,16 +30,7 @@ export default function PostBox({ user }) {
             <div className="flex items-center justify-between mt-2 px-2">
               <div className="flex gap-4 text-gray-500">
                 <button>
-                  <Paperclip className="w-5 h-5" />
-                </button>
-                <button>
                   <Image className="w-5 h-5" />
-                </button>
-                <button>
-                  <MapPin className="w-5 h-5" />
-                </button>
-                <button>
-                  <Globe className="w-5 h-5" />
                 </button>
               </div>
               <button
@@ -53,7 +44,7 @@ export default function PostBox({ user }) {
         </div>
       )}
 
-    {/*FRAMERRRRRRRRRRRRRR MODAL*/}
+      {/*FRAMERRRRRRRRRRRRRR MODAL*/}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -67,7 +58,7 @@ export default function PostBox({ user }) {
               initial={{ scale: 0.8, opacity: 0, y: 80 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.8, opacity: 0, y: 80 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              transition={{ type: "keyframes", stiffness: 300, damping: 30 }}
             >
               <button
                 className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
@@ -84,6 +75,21 @@ export default function PostBox({ user }) {
                 <div className="font-semibold">{user?.username}</div>
               </div>
               <form className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="font-medium text-gray-300">Title</span>
+                  <input
+                    type="text"
+                    className="w-full bg-gray-100 rounded-xl p-3 outline-none"
+                    placeholder="Whats Your Dish called?"
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-3">Difficulty</span>
+                  <input 
+                    type="text"
+                    className="w-full bg-gray-100 rounded-xl p-3 outline-none"
+                    />
+                </div>
                 <textarea
                   className="w-full bg-gray-100 rounded-xl p-3 outline-none resize-none"
                   rows={4}
@@ -96,16 +102,7 @@ export default function PostBox({ user }) {
                 />
                 <div className="flex gap-4 text-gray-500">
                   <button type="button">
-                    <Paperclip className="w-5 h-5" />
-                  </button>
-                  <button type="button">
                     <Image className="w-5 h-5" />
-                  </button>
-                  <button type="button">
-                    <MapPin className="w-5 h-5" />
-                  </button>
-                  <button type="button">
-                    <Globe className="w-5 h-5" />
                   </button>
                 </div>
                 <button

@@ -1,7 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const getToken = () => {
   const token = localStorage.getItem("accessToken");
@@ -39,8 +38,7 @@ const Profile = () => {
       const { data } = await axios.get("http://localhost:5000/api/posts", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      console.log(data);
-      return data;
+      return data.filter((post) => post.user._id === user?._id);
     },
     enabled: !!user,
   });

@@ -35,7 +35,7 @@ function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/:id/profile" element={<Profile />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/recipe/:id" element={<RecipeDetail />} />
         <Route path="/recipe/create" element={<CreateRecipe />} />

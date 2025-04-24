@@ -108,3 +108,22 @@ export const searchUsers = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .select("-password -refreshToken")
+      .populate("posts", "-user")
+      .populate("followers", "-password -refreshToken")
+      .populate("following", "-password -refreshToken");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}

@@ -41,7 +41,7 @@ export default function FeedSidebarLeft({
           <div>Loading...</div>
         ) : user ? (
           <>
-            <button onClick={() => navigate("/profile")}>
+            <button onClick={() => navigate(`/${user._id}/profile`)}>
               <img
                 src={user.profileImage}
                 alt="profile"
