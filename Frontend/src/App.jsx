@@ -13,11 +13,11 @@ import Recipes from "./pages/Recipes";
 import Feed from "./pages/Feed";
 import Profile from "./pages/Profile";
 import Loader from "../components/Loader";
+import { Theme } from "@radix-ui/themes";
 
 const queryClient = new QueryClient();
 
 function AppRoutes() {
-
   const isFetching = useIsFetching();
   const location = useLocation();
   const [routeLoading, setRouteLoading] = useState(false);
@@ -49,10 +49,12 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <AppRoutes />
-      </Router>
-    </QueryClientProvider>
+    <Theme theme="dark" disableSystemColorMode>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </QueryClientProvider>
+    </Theme>
   );
 }

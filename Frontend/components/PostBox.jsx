@@ -6,7 +6,7 @@ export default function PostBox({ user }) {
   const [open, setOpen] = useState(false);
   const [difficulty, setDifficulty] = useState("Easy");
   const [time, setTime] = useState("> 15 min");
-  const [cuisine, setCuisine] = useState("Italian");
+  const [cuisine, setCuisine] = useState("🌎 Fusion");
 
   const [showDifficultyPicker, setShowDifficultyPicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -282,7 +282,7 @@ export default function PostBox({ user }) {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: -10, scale: 0.8 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute mt-26 p-2 rounded-xl shadow-2xl z-50 text-black bg-white"
+                          className="absolute flex flex-wrap gap-2.5 justify-center mt-26 p-2 rounded-xl shadow-2xl z-50 text-black bg-white"
                         >
                           {cuisines.map((c) => (
                             <button
@@ -292,7 +292,7 @@ export default function PostBox({ user }) {
                                 setCuisine(`${c.country} ${c.name}`);
                                 setShowCuisinePicker(false);
                               }}
-                              className="p-1 mx-2 w-28 rounded-full text-sm bg-gray-100 hover:bg-gray-200 opacity-75"
+                              className="p-1 mx-2 w-22 rounded-full text-sm bg-gray-100 hover:bg-gray-200 opacity-75"
                             >
                               {c.country} {c.name}
                             </button>
@@ -308,7 +308,7 @@ export default function PostBox({ user }) {
                   </button>
                 </div>
                 <textarea
-                  className="w-full bg-gray-100 rounded-3xl p-3"
+                  className="w-full bg-gray-100 rounded-3xl p-3 focus:outline-none"
                   rows={2}
                   placeholder="Something about the dish..."
                 />
