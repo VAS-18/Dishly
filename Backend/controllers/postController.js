@@ -1,11 +1,29 @@
+import { uploadOnCloudinary } from "../config/cloudinary.js";
 import Post from "../models/postModel.js";
 
 export const createPost = async (req, res) => {
   try {
-    const post = await Post.create({ ...req.body, user: req.user._id });
-    res.status(201).json(post);
+    const files = req.files?.image
+      ? Array.isArray(req.files.image)
+        ? req.files.image
+        : [req.files.image]
+      : [];
+
+    const uploadPromises = files.map((f) =>
+      uploadOnCloudinary(f.path).then((result) => result?.url)
+    );
+    const imageUrls = await Promise.all(uploadPromises);
+
+    const post = await Post.create({
+          ...req.body,
+          user: req.user._id,
+          image: imageUrls
+        });
+
+    return res.status(201).json(post);
   } catch (error) {
-    res.status(400).json({ error: err.message });
+    console.error("createPost error:", error);
+    return res.status(400).json({ error: error.message });
   }
 };
 

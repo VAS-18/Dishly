@@ -1,19 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Image, Smile, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 export default function PostBox({ user }) {
   const [open, setOpen] = useState(false);
   const [difficulty, setDifficulty] = useState("Easy");
   const [time, setTime] = useState("> 15 min");
   const [cuisine, setCuisine] = useState("🌎 Fusion");
-
   const [showDifficultyPicker, setShowDifficultyPicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showCuisinePicker, setShowCuisinePicker] = useState(false);
-
   const difficulties = ["Easy", "Medium", "Hard"];
   const Time = ["> 15 min", "> 30 min", " < 1 hr"];
+  const [title, setTitle] = useState("");
+  const [caption, setCaption] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState(null);
+  const token = localStorage.getItem("accessToken");
   const cuisines = [
     { name: "Italian", country: "🇮🇹" },
     { name: "Japanese", country: "🇯🇵" },
@@ -29,6 +33,52 @@ export default function PostBox({ user }) {
     { name: "Middle Eastern", country: "🌶️" },
     { name: "Mediterranean", country: "🌊" },
   ];
+
+  const queryClient = useQueryClient();
+
+  const createPost = async (formData) => {
+    const { data } = await axios.post(
+      "http://localhost:5000/api/posts",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return data;
+  };
+
+  const mutation = useMutation({
+    mutationFn: createPost,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts"]);
+      setOpen(false);
+    },
+  });
+
+  const handleFileChange = (e) => {
+    setSelectedFiles(e.target.files[0]);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("title", title);
+    formData.append("caption", caption);
+    formData.append("difficulty", difficulty);
+    formData.append("time", time);
+    formData.append("cuisine", cuisine);
+
+    if (selectedFiles) {
+      formData.append("image", selectedFiles);
+    }
+
+    mutation.mutate(formData);
+  };
 
   const handleDifficulties = (diff) => {
     if (diff === "Easy") {
@@ -125,7 +175,7 @@ export default function PostBox({ user }) {
             </div>
             <div className="flex items-center justify-between mt-2 px-2">
               <div className="flex gap-4 text-gray-500">
-                <button>
+                <button value={image}>
                   <Image className="w-5 h-5" />
                 </button>
               </div>
@@ -169,11 +219,13 @@ export default function PostBox({ user }) {
                 />
                 <div className="font-semibold">{user?.username}</div>
               </div>
-              <form className="flex flex-col gap-4">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
                   <span className="font-medium text-gray-300">Title:</span>
                   <input
                     type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     className="w-full h-10 bg-gray-100 rounded-3xl p-3 outline-none"
                     placeholder="Whats Your Dish called?"
                   />
@@ -311,6 +363,8 @@ export default function PostBox({ user }) {
                   className="w-full bg-gray-100 rounded-3xl p-3 focus:outline-none"
                   rows={2}
                   placeholder="Something about the dish..."
+                  value={caption}
+                  onChange={(e) => setCaption(e.target.value)}
                 />
                 <button
                   type="submit"

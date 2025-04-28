@@ -7,17 +7,25 @@ const PostSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    title:{
+    title: {
       type: String,
-      required: true
+      required: true,
     },
-    image:[{
-      type: String
-    }],
+    image: [
+      {
+        type: String,
+      },
+    ],
+    Dificulty: {
+      type: String,
+    },
 
     caption: {
       type: String,
-      maxlength: 1000,
+      maxlength: 150,
+    },
+    Time: {
+      type: String,
     },
     cuisine: {
       type: String,
