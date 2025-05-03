@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Image, Smile, X } from "lucide-react";
+import { Image, Plus, Smile, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
-export default function PostBox({ user }) {
+const PostBox = ({ user }) => {
   const [open, setOpen] = useState(false);
   const [difficulty, setDifficulty] = useState("Easy");
   const [time, setTime] = useState("> 15 min");
@@ -16,8 +16,13 @@ export default function PostBox({ user }) {
   const Time = ["> 15 min", "> 30 min", " < 1 hr"];
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
-  const [selectedFiles, setSelectedFiles] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const token = localStorage.getItem("accessToken");
+  const fileInputRef = useRef(null);
+  const difficultyPickerRef = useRef(null);
+  const timePickerRef = useRef(null);
+  const cuisinePickerRef = useRef(null);
+
   const cuisines = [
     { name: "Italian", country: "🇮🇹" },
     { name: "Japanese", country: "🇯🇵" },
@@ -59,7 +64,12 @@ export default function PostBox({ user }) {
   });
 
   const handleFileChange = (e) => {
-    setSelectedFiles(e.target.files[0]);
+    const files = Array.from(e.target.files);
+
+    if (files.length > 3) {
+      files.splice(3);
+    }
+    setSelectedFiles((prevFiles) => [...prevFiles, ...files].slice(0, 3));
   };
 
   const handleSubmit = (e) => {
@@ -73,9 +83,9 @@ export default function PostBox({ user }) {
     formData.append("time", time);
     formData.append("cuisine", cuisine);
 
-    if (selectedFiles) {
-      formData.append("image", selectedFiles);
-    }
+    selectedFiles.forEach((f) => {
+      formData.append("image", f);
+    });
 
     mutation.mutate(formData);
   };
@@ -120,9 +130,11 @@ export default function PostBox({ user }) {
     }
   };
 
-  const difficultyPickerRef = useRef(null);
-  const timePickerRef = useRef(null);
-  const cuisinePickerRef = useRef(null);
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -174,11 +186,7 @@ export default function PostBox({ user }) {
               <Smile className="text-gray-400 w-6 h-6" />
             </div>
             <div className="flex items-center justify-between mt-2 px-2">
-              <div className="flex gap-4 text-gray-500">
-                <button value={image}>
-                  <Image className="w-5 h-5" />
-                </button>
-              </div>
+              <div className="flex gap-4 text-gray-500"></div>
               <button
                 className="bg-black text-white px-6 py-2 rounded-full font-semibold shadow disabled:opacity-50"
                 disabled
@@ -193,7 +201,7 @@ export default function PostBox({ user }) {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -355,9 +363,56 @@ export default function PostBox({ user }) {
                   </div>
                 </div>
                 <div className="flex justify-center items-center gap-3">
-                  <button type="button">
-                    <Image className="w-10 h-10" />
-                  </button>
+                  <div className="space-y-2">
+                    {selectedFiles.length > 0 && (
+                      <div className="flex gap-2 flex-wrap">
+                        {selectedFiles.map((file, index) => (
+                          <div key={index} className="relative w-20 h-20">
+                            <img
+                              src={URL.createObjectURL(file)}
+                              alt={`Preview ${index}`}
+                              className="object-cover w-20 h-20 border-4 border-indigo-200"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const filtered = selectedFiles.filter(
+                                  (_, i) => i !== index
+                                );
+                                setSelectedFiles(filtered);
+                              }}
+                              className="absolute -top-1 -right-1 bg-white hover:bg-red-200 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                            >
+                              <X className="w-4 h-4 filter invert" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <input
+                      id="postImage"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+
+                    <div className="flex flex-col items-center">
+                      <div className="flex">
+                        <button
+                          type="button"
+                          onClick={handleClick}
+                          className="flex cursor-pointer text-black font-semibold px-4 py-2"
+                        >
+                          <Image />
+                          <Plus />
+                        </button>
+                      </div>
+                      <span className="text-xs">Add Images</span>
+                    </div>
+                  </div>
                 </div>
                 <textarea
                   className="w-full bg-gray-100 rounded-3xl p-3 focus:outline-none"
@@ -368,7 +423,7 @@ export default function PostBox({ user }) {
                 />
                 <button
                   type="submit"
-                  className="bg-black text-white px-6 py-2 rounded-full font-semibold shadow mt-2"
+                  className="bg-violet-400 text-white px-6 py-2 rounded-full font-semibold shadow mt-2"
                 >
                   Post
                 </button>
@@ -379,4 +434,6 @@ export default function PostBox({ user }) {
       </AnimatePresence>
     </>
   );
-}
+};
+
+export default PostBox;
