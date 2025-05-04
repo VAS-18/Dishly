@@ -4,7 +4,7 @@ import storiesData from "../utils/stories.js";
 
 export default function FeedSidebarRight({ stories, suggested, categories }) {
   return (
-    <aside className="w-80 p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-8 h-full">
+    <aside className="p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-8 h-full">
       {/* Stories */}
       <div>
         <h2 className="font-bold text-lg mb-4">Food Stories</h2>

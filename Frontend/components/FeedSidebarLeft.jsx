@@ -35,7 +35,7 @@ export default function FeedSidebarLeft({
   ];
 
   return (
-    <aside className="w-64 p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-8 max-h-screen overflow-y-auto">
+    <aside className="w-64 p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-8">
       <div className="flex flex-col items-center">
         {userLoading ? (
           <div>Loading...</div>
@@ -45,7 +45,7 @@ export default function FeedSidebarLeft({
               <img
                 src={user.profileImage}
                 alt="profile"
-                className="w-20 h-20 rounded-full mb-2 border-4 border-indigo-200"
+                className="w-20 h-20 rounded-full mb-2 border-4 border-indigo-200 object-cover"
               />
             </button>
             <div className="font-bold text-lg">{user.username}</div>

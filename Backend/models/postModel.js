@@ -16,7 +16,7 @@ const PostSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    Dificulty: {
+    dificulty: {
       type: String,
     },
 
@@ -24,7 +24,7 @@ const PostSchema = new mongoose.Schema(
       type: String,
       maxlength: 150,
     },
-    Time: {
+    time: {
       type: String,
     },
     cuisine: {

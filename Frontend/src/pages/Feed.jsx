@@ -55,18 +55,20 @@ const Feed = () => {
   ];
 
   return (
-    <div className="min-h-screen flex justify-between p-10">
+    <div className="h-screen flex justify-around p-10 overflow-hidden">
       {/* Left Sidebar */}
-      <FeedSidebarLeft
-        user={user}
-        userLoading={userLoading}
-        setShowFoodies={setShowFoodies}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
+      <div className="flex flex-col h-full relative">
+        <FeedSidebarLeft
+          user={user}
+          userLoading={userLoading}
+          setShowFoodies={setShowFoodies}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
+      </div>
 
       {/* Main Feed */}
-      <div className="flex flex-col h-screen w-1/2 pb-40">
+      <div className="flex flex-col h-full w-2/5 relative">
         {showFoodies ? (
           <Foodies user={user} />
         ) : (
@@ -80,14 +82,15 @@ const Feed = () => {
           />
         )}
       </div>
-
-      {/* Right Sidebar */}
-      <FeedSidebarRight
-        stories={stories}
-        suggested={suggested}
-        categories={categories}
-      />
-      <PostBox user={user} />
+      <div className="flex flex-col h-max relative">
+        {/* Right Sidebar */}
+        <FeedSidebarRight
+          stories={stories}
+          suggested={suggested}
+          categories={categories}
+        />
+        <PostBox user={user} />
+      </div>
     </div>
   );
 };

@@ -7,10 +7,13 @@
   --color-linen:  #EFEFD0; 
 }
 
-.hide-scrollbar {
-    scrollbar-width: none; /* Firefox */
+@layer utilities {
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hidden {
     -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
+}
