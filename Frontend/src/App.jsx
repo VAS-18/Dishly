@@ -1,48 +1,45 @@
 import "@radix-ui/themes/styles.css";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useIsFetching } from "@tanstack/react-query";
-import Home from "./pages/Home";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import RecipeDetail from "./pages/RecipeDetail";
-import CreateRecipe from "./pages/CreateRecipe";
-import EditRecipe from "./pages/EditRecipe";
-import NotFound from "./pages/NotFound";
-import Recipes from "./pages/Recipes";
-import Feed from "./pages/Feed";
-import Profile from "./pages/Profile";
 import Loader from "../components/Loader";
 import { Theme } from "@radix-ui/themes";
+
+// Lazy-loaded pages
+const Home = lazy(() => import("./pages/Home"));
+const Register = lazy(() => import("./pages/Register"));
+const Login = lazy(() => import("./pages/Login"));
+const RecipeDetail = lazy(() => import("./pages/RecipeDetail"));
+const CreateRecipe = lazy(() => import("./pages/CreateRecipe"));
+const EditRecipe = lazy(() => import("./pages/EditRecipe"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Recipes = lazy(() => import("./pages/Recipes"));
+const Feed = lazy(() => import("./pages/Feed"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 const queryClient = new QueryClient();
 
 function AppRoutes() {
+  
   const isFetching = useIsFetching();
-  const location = useLocation();
-  const [routeLoading, setRouteLoading] = useState(false);
-
-  useEffect(() => {
-    setRouteLoading(true);
-    const timeout = setTimeout(() => setRouteLoading(false), 1200);
-    return () => clearTimeout(timeout);
-  }, [location]);
 
   return (
     <>
-      {(isFetching > 0 || routeLoading) && <Loader />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/:id/profile" element={<Profile />} />
-        <Route path="/feed" element={<Feed />} />
-        <Route path="/recipe/:id" element={<RecipeDetail />} />
-        <Route path="/recipe/create" element={<CreateRecipe />} />
-        <Route path="/recipe/:id/edit" element={<EditRecipe />} />
-        <Route path="/recipes" element={<Recipes />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      {(isFetching > 0) && <Loader />}
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/:id/profile" element={<Profile />} />
+          <Route path="/feed" element={<Feed />} />
+          <Route path="/recipe/:id" element={<RecipeDetail />} />
+          <Route path="/recipe/create" element={<CreateRecipe />} />
+          <Route path="/recipe/:id/edit" element={<EditRecipe />} />
+          <Route path="/recipes" element={<Recipes />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }
