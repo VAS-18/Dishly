@@ -1,6 +1,5 @@
-import exp from "constants";
+import dotenv from 'dotenv';
 import mongoose from "mongoose";
-
 
 const connectDB = async() => {
     try {

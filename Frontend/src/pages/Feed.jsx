@@ -65,10 +65,13 @@ const Feed = () => {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />
+                  <div className="absolute">
+        <PostBox user={user} />
+        </div>
       </div>
 
       {/* Main Feed */}
-      <div className="flex flex-col h-full w-2/5 relative">
+      <div className=" flex flex-col h-full w-2/5">
         {showFoodies ? (
           <Foodies user={user} />
         ) : (
@@ -81,6 +84,9 @@ const Feed = () => {
             userLoading={userLoading}
           />
         )}
+
+
+        
       </div>
       <div className="flex flex-col h-max relative">
         {/* Right Sidebar */}
@@ -89,8 +95,10 @@ const Feed = () => {
           suggested={suggested}
           categories={categories}
         />
-        <PostBox user={user} />
+      
+        
       </div>
+      
     </div>
   );
 };

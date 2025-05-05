@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { Heart, MessageCircle, Clock } from "lucide-react";
+import { Heart, MessageCircle, Clock, Loader } from "lucide-react";
 
 export default function FeedMain({
   posts,
@@ -24,6 +24,21 @@ export default function FeedMain({
     }
   };
 
+  const getTimeStyle = (time) => {
+    switch (time) {
+      case "> 15 min":
+        return "bg-red opacity-75";
+      case "> 30 min":
+        return "bg-[#FFBB64] opacity-75";
+      case "< 1 hr":
+        return "bg-[#FF6868] opacity-75";
+      default:
+        return "bg-gray-100";
+    }
+  };
+
+
+  
 
   const getTime = (time) => {
     switch (time) {
@@ -31,6 +46,11 @@ export default function FeedMain({
         return "bg-green text-green"
     }
   }
+
+  console.log("All difficulties:", posts?.map(post => post.difficulty));
+  
+
+
   
   return (
     <main className="flex-1 flex flex-col h-screen overflow-y-scroll scrollbar-hidden">
@@ -41,7 +61,7 @@ export default function FeedMain({
           layoutScroll
         >
           {isLoading ? (
-            <div>Loading...</div>
+            <div><Loader/></div>
           ) : (
             posts?.map((post, idx) => (
               <motion.div
@@ -51,7 +71,7 @@ export default function FeedMain({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 40 }}
                 transition={{ duration: 2, delay: idx * 0.1 }}
-                className="bg-white rounded-2xl mb-6 shadow-lg overflow-hidden scrollbar-none"
+                className="bg-white rounded-2xl mb-6 border border-gray-200 overflow-hidden scrollbar-none"
               >
             
                 <div className="relative">
@@ -77,14 +97,18 @@ export default function FeedMain({
                 <div className="p-6">
                   {/* Metadata row */}
                   <div className="flex items-center gap-3 mb-4">
-                    <span className={`px-3 py-1 rounded-full text-sm ${getDifficultyStyle(post.dificulty)}`}>
-                      {post.dificulty || "Easy"}
+                    <span className={`w-20 h-8 rounded-3xl border border-gray-200 opacity-75 text-sm font-semibold text-black shadow-sm flex items-center justify-center ${getDifficultyStyle(post.difficulty)}`}>
+                      {post.difficulty || "Easy"}
                     </span>
-                    <div className="flex items-center text-gray-500 text-sm">
-                      <Clock className="w-4 h-4 mr-1" />
-                      <span>{post.time || "> 15 min"}</span>
+                    
+                    <div className={`w-24 h-8 rounded-3xl border border-gray-200 text-sm font-semibold text-black shadow-sm flex items-center justify-center ${getTimeStyle(post.time)}`}>
+                      <span className="flex justify-center text-sm">
+    
+                        {post.time} ⏰
+                      </span>
                     </div>
-                    <span className="text-sm text-gray-500">
+                    
+                    <span className="w-36 h-8 rounded-3xl border border-gray-200 opacity-75 text-sm font-semibold text-black shadow-sm bg-gray-100 flex items-center justify-center">
                       {post.cuisine || "🌎 Fusion"}
                     </span>
                   </div>
@@ -108,7 +132,7 @@ export default function FeedMain({
                   )}
 
                   {/* Interactions */}
-                  <div className="flex items-center gap-4 mt-4 pt-4 border-t">
+                  <div className="flex items-center gap-4 mt-4 pt-4 ">
                     <div className="flex items-center gap-1">
                       <Heart className="w-5 h-5" />
                       <span>{post.likes?.length || 0}</span>

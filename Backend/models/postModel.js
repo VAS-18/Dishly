@@ -16,7 +16,7 @@ const PostSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    dificulty: {
+    difficulty: {
       type: String,
     },
 

@@ -65,7 +65,6 @@ const PostBox = ({ user }) => {
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-
     if (files.length > 3) {
       files.splice(3);
     }
@@ -166,37 +165,24 @@ const PostBox = ({ user }) => {
 
   return (
     <>
-      {!open && (
-        <div className="fixed bottom-0 left-0 w-full flex justify-center z-10 bg-transparent opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <button
-            className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-4 mb-4 flex flex-col gap-2 cursor-pointer"
+      <AnimatePresence>
+        {!open && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              border: "2px dashed purple",
+            }}
+            className="fixed bottom-0 w-56 h-56 mb-10 flex justify-center items-center z-10 bg-purple-100 opacity-40 cursor-pointer text-gray-500 font-bold"
+
             onClick={() => setOpen(true)}
           >
-            <div className="flex items-center gap-3">
-              <img
-                src={user?.profileImage}
-                alt="profile"
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <div className="w-full bg-gray-200 rounded-xl p-2">
-                <span className="inline opacity-45">
-                  Share What You Made Today
-                </span>
-              </div>
-              <Smile className="text-gray-400 w-6 h-6" />
-            </div>
-            <div className="flex items-center justify-between mt-2 px-2">
-              <div className="flex gap-4 text-gray-500"></div>
-              <button
-                className="bg-black text-white px-6 py-2 rounded-full font-semibold shadow disabled:opacity-50"
-                disabled
-              >
-                Send
-              </button>
-            </div>
-          </button>
-        </div>
-      )}
+            Create A post
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {open && (
