@@ -17,7 +17,7 @@ const Profile = () => {
   } = useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/api/auth/me", {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_DEV_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       console.log(data);
@@ -35,7 +35,7 @@ const Profile = () => {
   } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/api/posts", {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_DEV_URL}/api/posts`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       return data.filter((post) => post.user._id === user?._id);

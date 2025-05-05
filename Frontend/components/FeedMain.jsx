@@ -30,7 +30,7 @@ export default function FeedMain({
         return "bg-red opacity-75";
       case "> 30 min":
         return "bg-[#FFBB64] opacity-75";
-      case "< 1 hr":
+      case " < 1 hr":
         return "bg-[#FF6868] opacity-75";
       default:
         return "bg-gray-100";

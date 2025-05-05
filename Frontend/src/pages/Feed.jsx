@@ -15,7 +15,7 @@ const Feed = () => {
   const { data: posts, isLoading } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/api/posts");
+      const { data } = await axios.get(`${import.meta.env.VITE_API_DEV_URL}/api/posts`);
       return data;
     },
   });
@@ -23,7 +23,7 @@ const Feed = () => {
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/api/auth/me", {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_DEV_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       return data;

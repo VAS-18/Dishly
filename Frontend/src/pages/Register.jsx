@@ -25,7 +25,7 @@ export default function Register() {
         formData.append("profileImage", profileImage);
       }
       const { data } = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        `${import.meta.env.VITE_API_DEV_URL}/api/auth/register`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -57,6 +57,10 @@ export default function Register() {
     setSuccess("");
     registerMutation.mutate({ form, profileImage });
   };
+
+  const url = import.meta.env.VITE_API_DEV_URL;
+  console.log(url);
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">

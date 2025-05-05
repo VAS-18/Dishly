@@ -12,7 +12,7 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (form) => {
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', form);
+      const { data } = await axios.post(`${import.meta.env.VITE_API_DEV_URL}/api/auth/login`, form);
       return data;
     },
     onSuccess: (data) => {
