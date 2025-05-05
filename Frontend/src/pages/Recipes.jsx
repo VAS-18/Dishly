@@ -3,11 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_API_DEV_URL
+    : import.meta.env.VITE_API_PROD_URL;
+
 const Recipes = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["recipes"],
     queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/api/recipes");
+      const { data } = await axios.get(`${API_URL}/api/recipes`);
       return data;
     },
   });

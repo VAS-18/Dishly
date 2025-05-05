@@ -4,6 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_API_DEV_URL
+    : import.meta.env.VITE_API_PROD_URL;
+
 const PostBox = ({ user }) => {
   const [open, setOpen] = useState(false);
   const [difficulty, setDifficulty] = useState("Easy");
@@ -43,7 +48,7 @@ const PostBox = ({ user }) => {
 
   const createPost = async (formData) => {
     const { data } = await axios.post(
-      "http://localhost:5000/api/posts",
+      `${API_URL}/api/posts`,
       formData,
       {
         headers: {

@@ -4,6 +4,11 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Squares from '../UI/Squares';
 
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_API_DEV_URL
+    : import.meta.env.VITE_API_PROD_URL;
+
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -12,7 +17,7 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (form) => {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_DEV_URL}/api/auth/login`, form);
+      const { data } = await axios.post(`${API_URL}/api/auth/login`, form);
       return data;
     },
     onSuccess: (data) => {

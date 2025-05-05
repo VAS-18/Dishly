@@ -2,6 +2,11 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_API_DEV_URL
+    : import.meta.env.VITE_API_PROD_URL;
+
 const getToken = () => {
   const token = localStorage.getItem("accessToken");
   if (!token) {
@@ -17,7 +22,7 @@ const Profile = () => {
   } = useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_DEV_URL}/api/auth/me`, {
+      const { data } = await axios.get(`${API_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       console.log(data);
@@ -35,7 +40,7 @@ const Profile = () => {
   } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_DEV_URL}/api/posts`, {
+      const { data } = await axios.get(`${API_URL}/api/posts`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       return data.filter((post) => post.user._id === user?._id);

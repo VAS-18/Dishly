@@ -6,6 +6,12 @@ import FeedSidebarLeft from "../../components/FeedSidebarLeft";
 import FeedSidebarRight from "../../components/FeedSidebarRight";
 import PostBox from "../../components/PostBox";
 import Foodies from "../../components/Foodies";
+
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_API_DEV_URL
+    : import.meta.env.VITE_API_PROD_URL;
+
 const getToken = () => localStorage.getItem("accessToken");
 
 const Feed = () => {
@@ -15,7 +21,7 @@ const Feed = () => {
   const { data: posts, isLoading } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_DEV_URL}/api/posts`);
+      const { data } = await axios.get(`${API_URL}/api/posts`);
       return data;
     },
   });
@@ -23,7 +29,7 @@ const Feed = () => {
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_DEV_URL}/api/auth/me`, {
+      const { data } = await axios.get(`${API_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       return data;

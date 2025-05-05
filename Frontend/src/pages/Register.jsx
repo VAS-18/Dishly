@@ -15,6 +15,11 @@ export default function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const API_URL =
+    import.meta.env.MODE === "development"
+      ? import.meta.env.VITE_API_DEV_URL
+      : import.meta.env.VITE_API_PROD_URL;
+
   const registerMutation = useMutation({
     mutationFn: async ({ form, profileImage }) => {
       const formData = new FormData();
@@ -25,7 +30,7 @@ export default function Register() {
         formData.append("profileImage", profileImage);
       }
       const { data } = await axios.post(
-        `${import.meta.env.VITE_API_DEV_URL}/api/auth/register`,
+        `${API_URL}/api/auth/register`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
