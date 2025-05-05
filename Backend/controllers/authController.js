@@ -33,16 +33,18 @@ export const register = async (req, res) => {
         message: "User already exists",
       });
     }
-    const profileImagePath = req.files?.profileImage?.[0]?.path;
-
-    if (!profileImagePath) {
+    const profileImageBuffer = req.files?.profileImage?.[0]?.buffer;
+    if (!profileImageBuffer) {
       return res.status(400).json({
         error: "Please upload a profile image",
       });
     }
 
-    // Upload image to Cloudinary
-    const profileImage = await uploadOnCloudinary(profileImagePath);
+    // Upload image to Cloudinary using the file buffer and the original file name
+    const profileImage = await uploadOnCloudinary(
+      profileImageBuffer,
+      req.files.profileImage[0].originalname
+    );
 
     if (!profileImage) {
       return res.status(400).json({
