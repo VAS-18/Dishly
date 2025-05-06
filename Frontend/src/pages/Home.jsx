@@ -1,15 +1,22 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import "@radix-ui/themes/styles.css";
+import Footer from "../../components/Footer";
+import { useEffect } from "react";
+import NavBar from "../../components/NavBar";
+import { ArrowRight } from "lucide-react";
 
 const heroCollagePlaceholder = "/source.jpeg";
 
-
-
 export default function Landing() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Welcome to Dishly!";
+  }, []);
+
   return (
     <>
+      <NavBar />
       <main className="flex-1 flex items-center justify-center py-16 md:py-24 px-4">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="text-center md:text-left">
@@ -25,9 +32,19 @@ export default function Landing() {
               and connecting with fellow food lovers. Find the best places to
               eat with real reviews, ratings, and photos from the community.
             </p>
-            <Link to="/register">
-              <button>Register</button>
-            </Link>
+            <div>
+              <button
+                onClick={() => navigate("/register")}
+                className="group flex items-center bg-sunset hover:bg-orange-600 text-white font-bold py-2 pl-4 pr-2 rounded-full overflow-hidden transition-all duration-300 ease-in-out cursor-pointer"
+              >
+                <span className="whitespace-nowrap mr-1 group-hover:mr-1 transition-all duration-300">
+                  Join The Kitchen Now!
+                </span>
+                <div className="w-0 group-hover:w-6 transition-all duration-300 overflow-hidden flex items-center justify-center">
+                  <ArrowRight className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0 h-5 w-5" />
+                </div>
+              </button>
+            </div>
           </div>
 
           <div className="flex justify-center items-center relative">
@@ -40,10 +57,7 @@ export default function Landing() {
         </div>
       </main>
 
-      <footer className="text-center text-gray-500 dark:text-gray-400 p-6 text-sm border-t border-gray-200 dark:border-gray-800">
-        &copy; {new Date().getFullYear()} Dishly. Crafted with{" "}
-        <span className="text-red-500">♥</span> for food lovers
-      </footer>
+      <Footer />
     </>
   );
 }

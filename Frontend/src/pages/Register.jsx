@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import Squares from "../UI/Squares";
 
 export default function Register() {
+
+  useEffect(()=>{
+    document.title = "Dishly | Register"
+  },[])
+
   const [form, setForm] = useState({
     username: "",
     email: "",

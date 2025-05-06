@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import Squares from '../UI/Squares';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import Squares from "../UI/Squares";
 
 const API_URL =
   import.meta.env.MODE === "development"
@@ -10,9 +10,13 @@ const API_URL =
     : import.meta.env.VITE_API_PROD_URL;
 
 export default function Login() {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  useEffect(() => {
+    document.title = "Dishly | Login";
+  }, []);
+
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   const loginMutation = useMutation({
@@ -21,20 +25,21 @@ export default function Login() {
       return data;
     },
     onSuccess: (data) => {
-      localStorage.setItem('accessToken', data.accessToken);
-      setSuccess('Login successful!');
-      navigate('/feed');
+      localStorage.setItem("accessToken", data.accessToken);
+      setSuccess("Login successful!");
+      navigate("/feed");
     },
     onError: (err) => {
-      setError(err.response?.data?.error || err.message || 'Login failed');
+      setError(err.response?.data?.error || err.message || "Login failed");
     },
   });
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
     loginMutation.mutate(form);
   };
 
@@ -42,18 +47,21 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background Squares */}
       <div className="absolute inset-0 z-10 opacity-15">
-        <Squares
-          speed={0.5}
-          squareSize={40}
-          direction="down"
-        />
+        <Squares speed={0.5} squareSize={40} direction="down" />
       </div>
       {/* Login Form */}
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border border-gray-100 relative z-10">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-900">Welcome Back</h2>
+        <h2 className="text-3xl font-bold text-center mb-6 text-gray-900">
+          Welcome Back
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-700">Email</label>
+            <label
+              htmlFor="email"
+              className="block mb-1 text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -66,7 +74,12 @@ export default function Login() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-700">Password</label>
+            <label
+              htmlFor="password"
+              className="block mb-1 text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -83,13 +96,17 @@ export default function Login() {
             disabled={loginMutation.isLoading}
             className="w-full py-3 rounded-xl bg-sunset hover:bg-sand text-white font-semibold shadow transition disabled:opacity-50"
           >
-            {loginMutation.isLoading ? 'Logging in...' : 'Login'}
+            {loginMutation.isLoading ? "Logging in..." : "Login"}
           </button>
-          {error && <div className="text-red-600 text-center text-sm">{error}</div>}
-          {success && <div className="text-green-600 text-center text-sm">{success}</div>}
+          {error && (
+            <div className="text-red-600 text-center text-sm">{error}</div>
+          )}
+          {success && (
+            <div className="text-green-600 text-center text-sm">{success}</div>
+          )}
         </form>
         <div className="text-center text-sm text-gray-500 mt-6">
-          New to Dishly?{' '}
+          New to Dishly?{" "}
           <a href="/register" className="text-sand hover:underline font-medium">
             Create an account
           </a>

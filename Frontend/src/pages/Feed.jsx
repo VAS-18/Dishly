@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import FeedMain from "../../components/FeedMain";
@@ -15,6 +15,11 @@ const API_URL =
 const getToken = () => localStorage.getItem("accessToken");
 
 const Feed = () => {
+
+    useEffect(()=>{
+      document.title = "Dishly | Feed"
+    },[])
+
   const [activeTab, setActiveTab] = useState("Friends");
   const [showFoodies, setShowFoodies] = useState(false);
 
